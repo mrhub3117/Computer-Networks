@@ -1,0 +1,43 @@
+Develop a UDP-based chat system where two users can send and receive messages simultaneously.
+import java.net.*;
+import java.util.*;
+
+public class Udpsender{
+    public static void main(String []b)throws Exception{
+        Scanner sc = new Scanner(System.in);
+        
+        System.out.println("Your Address port:");
+        int listenport = sc.nextInt();
+        System.out.println("Friend address port:");
+        int sendport = sc.nextInt();
+        
+        DatagramSocket socket = new DatagramSocket(listenport);
+        InetAddress friendAddress = InetAddress.getByName("localhost");
+        
+        new Thread(() ->{
+            byte[] buffer = new byte[1024];
+            while(true){
+                try{
+                DatagramPacket packet = new DatagramPacket(buffer,buffer.length);
+                socket.receive(packet);
+                String receivedMessage = new String(packet.getData(),0,packet.getLength());
+                System.out.println("\nFriend:"+receivedMessage);
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+            
+            }
+            
+        }).start();
+        
+        while(true){
+            System.out.println("You:");
+            String message = sc.nextLine();
+            
+            byte[] buffer = message.getBytes();
+            DatagramPacket packet = new DatagramPacket(buffer,buffer.length,friendAddress,sendport);
+            socket.send(packet);
+        }
+        
+    }
+}
