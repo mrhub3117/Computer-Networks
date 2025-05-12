@@ -41,3 +41,11 @@ public class Udpsender{
         
     }
 }
+to get output:
+use listenport:5000
+friendport:6000
+
+run it in two tabs:
+there you should change port number viceversa
+listenport 6000
+friendport 5000
